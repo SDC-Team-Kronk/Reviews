@@ -19,26 +19,31 @@ app.use(
   }),
 );
 
-app.get('/reviews/:productId/list?sort=:sortString:asc&count=:count}', (req, res) => {
+app.get('/reviews/:productId/list?sort=:sortString:asc&count=:count', (req, res) => {
   const { productId, sortString, count } = req.params;
-
-  getReviews(productId, sortString, count)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
+  let reviews;
+  try {
+    try {
+      reviews = getReviews(productId, sortString, count)
+    } finally {
+      res.send(reviews);
+    }
+  } catch (err) {
       res.status(400).send(`Error from meta get handler: ${err}`);
-    });
+  };
 });
 
-app.get('/reviews/:productId/meta', (req, res) => {
-  getMetaData(req.params.productId)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(400).send(`Error from meta get handler: ${err}`);
-    });
+app.get('/reviews/:productId/meta', async (req, res) => {
+  let meta;
+  try {
+    try {
+      meta = getMetaData(req.params.productId);
+    } finally {
+      res.send(meta);
+    }
+  } catch (err) {
+    res.status(400).send(`Error from meta get handler: ${err}`);
+  };
 });
 
 app.put('/reviews/report/:reviewId', (req, res) => {
