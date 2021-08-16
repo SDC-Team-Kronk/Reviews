@@ -19,17 +19,18 @@ app.use(
   }),
 );
 
-app.get('/reviews/:productId/list?sort=:sortString:asc&count=:count', (req, res) => {
+app.get('/reviews/:productId/list?sort=:sortString:asc&count=:count', async (req, res) => {
   const { productId, sortString, count } = req.params;
   let reviews;
   try {
     try {
-      reviews = getReviews(productId, sortString, count)
-    } finally {
+      reviews = await getReviews(productId, sortString, count)
       res.send(reviews);
+    } catch (err) {
+      res.status(400).send(`Error from getReviews: ${err}`);
     }
   } catch (err) {
-      res.status(400).send(`Error from meta get handler: ${err}`);
+      res.status(400).send(`Error from review list get handler: ${err}`);
   };
 });
 
@@ -37,33 +38,42 @@ app.get('/reviews/:productId/meta', async (req, res) => {
   let meta;
   try {
     try {
-      meta = getMetaData(req.params.productId);
-    } finally {
+      meta = await getMetaData(req.params.productId);
       res.send(meta);
+    } catch (err) {
+      res.status(400).send(`Error from getMetaData: ${err}`);
     }
   } catch (err) {
     res.status(400).send(`Error from meta get handler: ${err}`);
   };
 });
 
-app.put('/reviews/report/:reviewId', (req, res) => {
-  report(req.params.reviewId)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(400).send(`Error from report put handler: ${err}`);
-    });
+app.put('/reviews/report/:reviewId', async (req, res) => {
+  let reported;
+  try {
+    try {
+      reported = await report(req.params.reviewId);
+      res.send(reported);
+    } catch (err) {
+      res.status(400).send(`Error from report: ${err}`);
+    }
+  } catch (err) {
+    res.status(400).send(`Error from report put handler: ${err}`);
+  };
 });
 
-app.post('/reviews/:productId', (req, res) => {
-  postReview(req.params.productId, req.data)
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(400).send(`Error from review post handler: ${err}`);
-    });
+app.post('/reviews/:productId', async (req, res) => {
+  let posted;
+  try {
+    try {
+      posted = await postReview(req.params.productId, req.body);
+      res.send(posted);
+    } catch (err) {
+      res.status(400).send(`Error from postReview: ${err}`)
+    }
+  } catch (err) {
+    res.status(400).send(`Error from review post handler: ${err}`);
+  };
 });
 
 app.listen(port);

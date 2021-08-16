@@ -58,7 +58,7 @@ const report = (reviewId) => {
 
 const postReview = (productId, data) => {
   const date = new Date().getTime();
-  const query = `INSERT INTO reviews(product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) VALUES ($1, $2, $3, $4, $5, $6, false, $7, $8, null, 0);`;
+  const query = `INSERT INTO reviews(id, product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, false, $7, $8, null, 0);`;
   const values = [productId, data.rating, date, data.summary, data.body, data.recommend, data.name, data.email];
   return client.query(query, values, (error) => {
     if (error) {
