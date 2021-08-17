@@ -19,13 +19,20 @@ app.use(
   }),
 );
 
-app.get('/reviews/:productId/list?sort=:sortString:asc&count=:count', async (req, res) => {
-  const { productId, sortString, count } = req.params;
+app.get('/reviews/:productId/list', async (req, res) => {
+  const { productId } = req.params;
+  const { sort, count } = req.query;
   let reviews;
   try {
     try {
-      reviews = await getReviews(productId, sortString, count)
-      res.send(reviews);
+      reviews = await getReviews(productId, sort, count)
+      let reviewsFormatted = {
+        results: []
+      }
+      for (let i = 0; i < reviews.rows.length; i++) {
+        reviewsFormatted.results.push(reviews.rows[i]);
+      }
+      res.send(reviewsFormatted);
     } catch (err) {
       res.status(400).send(`Error from getReviews: ${err}`);
     }
@@ -39,7 +46,20 @@ app.get('/reviews/:productId/meta', async (req, res) => {
   try {
     try {
       meta = await getMetaData(req.params.productId);
-      res.send(meta);
+      let metaFormatted = {
+        ratings: {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0
+        }
+      }
+      for (let i = 0; i < meta.rows.length; i++) {
+        const x = meta.rows[i].rating;
+        metaFormatted.ratings[x]++;
+      }
+      res.send(metaFormatted);
     } catch (err) {
       res.status(400).send(`Error from getMetaData: ${err}`);
     }
