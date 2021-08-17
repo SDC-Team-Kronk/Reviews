@@ -30,6 +30,10 @@ app.get('/reviews/:productId/list', async (req, res) => {
         results: []
       }
       for (let i = 0; i < reviews.rows.length; i++) {
+        const milli = reviews.rows[i].date * 1000;
+        const dateObj = new Date(milli);
+        const humanDateFormat = dateObj.toLocaleString();
+        reviews.rows[i].date = humanDateFormat;
         reviewsFormatted.results.push(reviews.rows[i]);
       }
       res.send(reviewsFormatted);
