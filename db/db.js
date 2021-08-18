@@ -15,14 +15,14 @@ const getReviews = async (productId, sortString, count) => {
   let sortField;
   let query = `SELECT * FROM reviews WHERE (product_id = $1) ORDER BY $2 ASC LIMIT $3;`;
   let values;
-  if (sortString === 'relevant') {
+  if (sortString === 'relevant:asc') {
     sortField = 'helpfulness';
     const sortField2 = 'date';
     query = `SELECT * FROM reviews WHERE (product_id = $1) ORDER BY $2 ASC, $3 ASC LIMIT $4;`;
     values = [productId, sortField, sortField2, count];
-  } else if (sortString === 'newest') {
+  } else if (sortString === 'newest:asc') {
     sortField = 'date';
-  } else if (sortString === 'helpful') {
+  } else if (sortString === 'helpful:asc') {
     sortField = 'helpfulness';
   }
   if (!values) {

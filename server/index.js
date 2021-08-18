@@ -24,80 +24,65 @@ app.get('/reviews/:productId/list', async (req, res) => {
   const { sort, count } = req.query;
   let reviews;
   try {
-    try {
-      reviews = await getReviews(productId, sort, count)
-      let reviewsFormatted = {
-        results: []
-      }
-      for (let i = 0; i < reviews.rows.length; i++) {
-        const milli = reviews.rows[i].date * 1000;
-        const dateObj = new Date(milli);
-        const humanDateFormat = dateObj.toLocaleString();
-        reviews.rows[i].date = humanDateFormat;
-        reviewsFormatted.results.push(reviews.rows[i]);
-      }
-      res.send(reviewsFormatted);
-    } catch (err) {
-      res.status(400).send(`Error from getReviews: ${err}`);
+    reviews = await getReviews(productId, sort, count);
+    const reviewsFormatted = {
+      results: [],
+    };
+    for (let i = 0; i < reviews.rows.length; i += 1) {
+      const milli = reviews.rows[i].date * 1000;
+      const dateObj = new Date(milli);
+      const humanDateFormat = dateObj.toLocaleString();
+      reviews.rows[i].date = humanDateFormat;
+      reviewsFormatted.results.push(reviews.rows[i]);
     }
+    console.log(reviewsFormatted);
+    res.send(reviewsFormatted);
   } catch (err) {
-      res.status(400).send(`Error from review list get handler: ${err}`);
-  };
+    res.status(400).send(`Error from review list get handler: ${err}`);
+  }
 });
 
 app.get('/reviews/:productId/meta', async (req, res) => {
   let meta;
   try {
-    try {
-      meta = await getMetaData(req.params.productId);
-      let metaFormatted = {
-        ratings: {
-          1: 0,
-          2: 0,
-          3: 0,
-          4: 0,
-          5: 0
-        }
-      }
-      for (let i = 0; i < meta.rows.length; i++) {
-        const x = meta.rows[i].rating;
-        metaFormatted.ratings[x]++;
-      }
-      res.send(metaFormatted);
-    } catch (err) {
-      res.status(400).send(`Error from getMetaData: ${err}`);
+    meta = await getMetaData(req.params.productId);
+    const metaFormatted = {
+      ratings: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+      },
+    };
+    for (let i = 0; i < meta.rows.length; i += 1) {
+      const x = meta.rows[i].rating;
+      metaFormatted.ratings[x] += 1;
     }
+    res.send(metaFormatted);
   } catch (err) {
     res.status(400).send(`Error from meta get handler: ${err}`);
-  };
+  }
 });
 
 app.put('/reviews/report/:reviewId', async (req, res) => {
   let reported;
   try {
-    try {
-      reported = await report(req.params.reviewId);
-      res.send(reported);
-    } catch (err) {
-      res.status(400).send(`Error from report: ${err}`);
-    }
+    reported = await report(req.params.reviewId);
+    res.send(reported);
   } catch (err) {
     res.status(400).send(`Error from report put handler: ${err}`);
-  };
+  }
 });
 
 app.post('/reviews/:productId', async (req, res) => {
   let posted;
   try {
-    try {
-      posted = await postReview(req.params.productId, req.body);
-      res.send(posted);
-    } catch (err) {
-      res.status(400).send(`Error from postReview: ${err}`)
-    }
+    posted = await postReview(req.params.productId, req.body);
+    res.send(posted);
   } catch (err) {
     res.status(400).send(`Error from review post handler: ${err}`);
-  };
+  }
 });
 
 app.listen(port);

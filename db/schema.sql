@@ -29,3 +29,7 @@ COPY reviews_photos(id, review_id, url) FROM '/Users/slick/Documents/Work/Immers
 ALTER SEQUENCE reviews_id_seq RESTART WITH 5774953;
 
 ALTER SEQUENCE reviews_photos_id_seq RESTART WITH 2742541;
+
+CREATE INDEX idx_reviews_product_id ON reviews(product_id);
+
+CREATE INDEX idx_reviews_review_id ON reviews(id);
