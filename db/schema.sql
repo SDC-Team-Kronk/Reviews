@@ -22,9 +22,9 @@ CREATE TABLE reviews_photos(
   url varchar(1000)
 );
 
-COPY reviews(id, product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) FROM '~/reviews.csv' DELIMITER ',' CSV HEADER;
+COPY reviews(id, product_id, rating, date, summary, body, recommend, reported, reviewer_name, reviewer_email, response, helpfulness) FROM '/var/lib/postgres/reviews.csv' DELIMITER ',' CSV HEADER;
 
-COPY reviews_photos(id, review_id, url) FROM '~/reviews_photos.csv' DELIMITER ',' CSV HEADER;
+COPY reviews_photos(id, review_id, url) FROM '/var/lib/postgres/reviews_photos.csv' DELIMITER ',' CSV HEADER;
 
 ALTER SEQUENCE reviews_id_seq RESTART WITH 5774953;
 
