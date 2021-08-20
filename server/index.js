@@ -85,4 +85,6 @@ app.post('/reviews/:productId', async (req, res) => {
   }
 });
 
-app.listen(port);
+app.listen(port, () => {
+  console.log('Listening on port ', port);
+});
