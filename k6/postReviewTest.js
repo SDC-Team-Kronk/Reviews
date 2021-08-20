@@ -12,8 +12,11 @@ const data = {
 }
 
 export let options = {
-  vus: 10,
-  duration: '30s',
+  stages: [
+    { target: 50, duration: '1m' },
+    { target: 100, duration: '1m' },
+    { target: 250, duration: '5m' }
+  ]
 };
 
 export default function () {

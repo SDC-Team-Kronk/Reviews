@@ -4,8 +4,11 @@ import { sleep } from 'k6';
 const reviewIds = ['1', '15', '666', '2843', '50515', '890461', '4789123', '420', '69'];
 
 export let options = {
-  vus: 10,
-  duration: '30s',
+  stages: [
+    { target: 50, duration: '1m' },
+    { target: 100, duration: '1m' },
+    { target: 250, duration: '5m' }
+  ]
 };
 
 export default function () {

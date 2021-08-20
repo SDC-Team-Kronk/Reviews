@@ -5,8 +5,11 @@ const productIds = ['1', '2', '4', '5', '653044', '653052', '653061', '653085', 
 const sortStrings = ['relevant', 'helpful', 'newest'];
 
 export let options = {
-  vus: 10,
-  duration: '30s',
+  stages: [
+    { target: 50, duration: '1m' },
+    { target: 100, duration: '1m' },
+    { target: 250, duration: '5m' }
+  ]
 };
 
 export default function () {
